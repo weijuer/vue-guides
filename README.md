@@ -1,25 +1,9 @@
 # vue-guides
 vue-guides is a lightweight, simple and customizable tour plugin for use with Vue.js.
 
-## Project setup
-```
-yarn install
-```
+## Getting Started
+You can install vue-guides using npm or by downloading the minified build on GitHub.
 
-### Compiles and hot-reloads for development
 ```
-yarn serve
+npm install vue-guides
 ```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

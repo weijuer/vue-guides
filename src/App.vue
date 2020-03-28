@@ -1,28 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <Header />
+    <Main />
+    <Footer />
+    <w-guide />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld.vue";
+import { Header, Main, Footer } from './components/layout'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   components: {
-    HelloWorld
+    Header,
+    Main,
+    Footer
   }
 })
 export default class App extends Vue {}
 </script>
 
 <style lang="stylus">
-#app
-  font-family Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
+body
+  width: 100%
+  padding: 0
+  margin: 0
+  overflow-x: auto
+  color: #323233
+  font-size: 16px
+  font-family: PingFang SC, "Helvetica Neue", Arial, sans-serif
+  background-color: #f7f8fa
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
 </style>
