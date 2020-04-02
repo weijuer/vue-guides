@@ -3,7 +3,7 @@
     <Header />
     <Main />
     <Footer />
-    <w-guide />
+    <w-guide :show="show" :steps="steps" />
   </div>
 </template>
 
@@ -18,7 +18,25 @@ import { Component, Vue } from 'vue-property-decorator'
     Footer
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private show = true
+
+  // 指引数据
+  private steps: Array<object> = [
+    {
+      name: 'test1',
+      target: '[data-guide="w-guide-0"]',
+      header: 'header-1',
+      content: 'content-1'
+    },
+    {
+      name: 'test2',
+      target: '[data-guide="w-guide-1"]',
+      header: 'header-2',
+      content: 'content-2'
+    }
+  ]
+}
 </script>
 
 <style lang="stylus">

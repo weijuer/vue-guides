@@ -5,7 +5,7 @@
     </van-grid>
 
     <van-grid style="margin-top: 16px" :gutter="10">
-      <van-grid-item v-for="value in 8" :key="value" icon="photo-o" text="文字" />
+      <van-grid-item v-for="(value, index) in 8" :key="index" icon="photo-o" text="文字" />
     </van-grid>
   </main>
 </template>
@@ -19,7 +19,6 @@ export default class Main extends Vue {}
 
 <style lang="stylus">
 .app-main
+  min-height: calc(100vh - 96px)
   box-sizing: border-box
-  min-height: calc(100vh - 56px)
-  padding-bottom: 20px
 </style>
