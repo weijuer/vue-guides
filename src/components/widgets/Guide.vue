@@ -1,6 +1,6 @@
 <template>
   <div class="w-guide" v-if="show">
-    <w-step v-for="(step, index) of steps" :key="'step' + index" :step="step" />
+    <w-step v-for="(step, index) of steps" :key="'step' + index" :active="active === index + 1" :step="step" @next="next()" @prev="prev()"></w-step>
   </div>
 </template>
 
@@ -16,22 +16,22 @@ import Step from './Step.vue'
 export default class WGuide extends Vue {
   // 指引是否展示
   @Model('change', { type: Boolean })
-  @Prop()
+  @Prop({ type: Boolean, default: false })
   private show!: boolean
 
   // 自定义待指引步骤对象集合
-  @Prop()
+  @Prop({ type: Array, default: [] })
   private steps!: Array<object>
 
   // 当前页面待指引DOM集合
   private guidesDOM!: Array<Element>
 
   // 当前激活指引步骤
-  private active = -1
+  private active = 1
 
   mounted() {
-    this.init()
-    this.getActiveGuide()
+    // this.init()
+    // this.getActiveGuide()
   }
 
   init() {
@@ -39,9 +39,25 @@ export default class WGuide extends Vue {
     this.guidesDOM = Array.from(document.querySelectorAll('[data-guide]'))
   }
 
-  getActiveGuide() {
-    console.log(this.$parent)
-    // console.log('this.guidesDOM[0]', this.guidesDOM[0].getClientRects())
+  // 获取当前target元素
+  getActiveTarget() {
+    const activeTarget = document.querySelector('')
+  }
+
+  // 下一步
+  next() {
+    if (this.active >= this.steps.length) {
+      // TODO 优化
+      this.show = false
+    } else {
+      this.active++
+    }
+  }
+
+  // 上一步
+  prev() {
+    if (this.active == 0) return
+    this.active--
   }
 }
 </script>
@@ -49,7 +65,6 @@ export default class WGuide extends Vue {
 <style lang="stylus">
 [data-guide]
   &.active
-    position: relative
     background: #fff
     border: 1px solid #fff
     border-radius: 4px
@@ -57,16 +72,12 @@ export default class WGuide extends Vue {
     z-index: 2020
 
 .w-guide
-  position: relative
-
-  &:after
-    content ''
-    display flex
-    position fixed
-    top 0
-    left 0
-    right 0
-    bottom 0
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 2020;
+  display flex
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2020;
 </style>

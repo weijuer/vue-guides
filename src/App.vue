@@ -3,7 +3,7 @@
     <Header />
     <Main />
     <Footer />
-    <w-guide :show="show" :steps="steps" />
+    <w-guide v-model="show" :steps="steps" />
   </div>
 </template>
 
@@ -25,15 +25,21 @@ export default class App extends Vue {
   private steps: Array<object> = [
     {
       name: 'test1',
-      target: '[data-guide="w-guide-0"]',
+      target: '[data-guide="step-1"]',
       header: 'header-1',
       content: 'content-1'
     },
     {
       name: 'test2',
-      target: '[data-guide="w-guide-1"]',
+      target: '[data-guide="step-2"]',
       header: 'header-2',
       content: 'content-2'
+    },
+    {
+      name: 'test3',
+      target: '.van-nav-bar__left',
+      header: 'header-3',
+      content: 'content-3'
     }
   ]
 }

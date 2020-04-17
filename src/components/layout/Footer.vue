@@ -1,8 +1,8 @@
 <template>
   <footer>
     <van-tabbar v-model="active">
-      <van-tabbar-item data-guide="w-guide-0" icon="home-o">首页</van-tabbar-item>
-      <van-tabbar-item data-guide="w-guide-1" icon="search" dot>搜索</van-tabbar-item>
+      <van-tabbar-item data-guide="step-1" icon="home-o">首页</van-tabbar-item>
+      <van-tabbar-item data-guide="step-2" icon="search" dot>搜索</van-tabbar-item>
       <van-tabbar-item icon="friends-o" badge="5">联系人</van-tabbar-item>
       <van-tabbar-item icon="setting-o" badge="20">设置</van-tabbar-item>
     </van-tabbar>
