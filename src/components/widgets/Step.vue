@@ -1,5 +1,5 @@
 <template>
-  <div class="w-step" :class="{ active: active }" ref="w-step" :style="stepStyle">
+  <div class="w-step" :class="[{ active: active }, position]" ref="w-step" :style="stepStyle">
     <div class="w-step__header" v-if="$slots.header || step.header">
       <slot name="header">{{ step.header }}</slot>
     </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit, Ref } from 'vue-property-decorator'
+import { Component, Vue, Prop, PropSync, Emit, Ref } from 'vue-property-decorator'
 
 @Component
 export default class WStep extends Vue {
@@ -27,6 +27,9 @@ export default class WStep extends Vue {
 
   @Prop({ type: Object })
   step!: W.Step
+
+  @PropSync('targetStyle', { type: Object })
+  syncedTargetStyle!: object
 
   @Prop({ type: Boolean })
   active!: boolean
@@ -37,6 +40,9 @@ export default class WStep extends Vue {
   // 页面guide对应元素
   targetDOM: Element | null = null
 
+  // 角标位置 top | left | right | bottom✔
+  position = 'bottom'
+
   mounted() {
     this.init()
   }
@@ -45,7 +51,7 @@ export default class WStep extends Vue {
     // 获取目标元素
     this.targetDOM = document.querySelector(this.step.target)
     // 添加data-guide属性
-    this.targetDOM && this.targetDOM.setAttribute('data-guide', 'w-guide')
+    this.targetDOM && this.targetDOM.setAttribute('data-w-guide', 'w-guide')
   }
 
   // 获取step样式
@@ -61,8 +67,9 @@ export default class WStep extends Vue {
       // 首次初始化
       this.processActiveTarget()
 
+      // 重置tail位置
       if (targetTop <= 0) {
-        this.$step.classList.add('top')
+        this.position = 'top'
       }
 
       const top = targetTop <= 0 ? `${targetTop + stepHeight}px` : `${targetTop - stepHeight - offset}px`
@@ -73,12 +80,24 @@ export default class WStep extends Vue {
         left: left
       }
     } else {
-      return {}
+      return null
     }
   }
 
   // 处理当前target元素
   processActiveTarget() {
+    if (this.active && this.targetDOM) {
+      // 目标元素坐标
+      const { top, left, width, height } = this.targetDOM.getBoundingClientRect()
+
+      this.syncedTargetStyle = {
+        top: `${top}px`,
+        left: `${left}px`,
+        width: `${width}px`,
+        height: `${height}px`
+      }
+    }
+
     this.active && this.targetDOM && this.targetDOM.classList.toggle('active')
   }
 
@@ -87,6 +106,7 @@ export default class WStep extends Vue {
   next() {
     this.processActiveTarget()
     console.log('emit next')
+    return 'test'
   }
 
   // 上一步
@@ -99,6 +119,27 @@ export default class WStep extends Vue {
 </script>
 
 <style lang="stylus">
+$position = top right bottom left
+
+tail(position)
+  $pos = opposite-position(position)
+  content ''
+  display inline-block
+  position: absolute
+  {$pos} 100%
+  if position in (left right)
+    top 8px
+  if position in (top bottom)
+    left 8px
+  border 8px solid transparent
+  border-{$pos}-color #fff
+
+tailMaker(positions)
+  for pos, i in positions
+    &.{pos}
+      &:after
+        tail(pos)
+
 .w-step
   padding: 6px;
   display: inline-block;
@@ -117,23 +158,5 @@ export default class WStep extends Vue {
   .w-step__header
     font-weight 600
 
-  &:after
-    content ''
-    position: absolute
-    top: 100%
-    left 8px
-    display inline-block
-    border 8px solid
-    border-color #fff transparent transparent transparent
-
-  &.top
-    &:after
-      content: ''
-      position: absolute
-      bottom: 100%
-      left: 8px;
-      top: initial
-      display: inline-block
-      border: 8px solid
-      border-color: transparent transparent #fff transparent
+  tailMaker($position)
 </style>
