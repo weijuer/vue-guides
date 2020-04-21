@@ -3,7 +3,7 @@
     <Header />
     <Main />
     <Footer />
-    <w-guide v-model="show" :steps="steps" />
+    <w-guide :show.sync="show" :steps="steps" />
   </div>
 </template>
 
@@ -40,6 +40,12 @@ export default class App extends Vue {
       target: '.van-nav-bar__left',
       header: 'header-3',
       content: 'content-3'
+    },
+    {
+      name: 'test4',
+      target: '#GuideTest2',
+      header: 'header-4',
+      content: 'content-4'
     }
   ]
 }

@@ -5,7 +5,7 @@
     </van-grid>
 
     <van-grid style="margin-top: 16px" :gutter="10">
-      <van-grid-item v-for="(value, index) in 8" :key="index" icon="photo-o" text="文字" />
+      <van-grid-item :id="index === 1 ? 'GuideTest2' : null" v-for="(value, index) in 8" :key="index" icon="photo-o" text="文字" />
     </van-grid>
   </main>
 </template>

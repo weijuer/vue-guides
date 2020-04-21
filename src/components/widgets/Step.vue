@@ -1,5 +1,5 @@
 <template>
-  <div class="w-step" :class="[{ active: active }, position]" ref="w-step" :style="stepStyle">
+  <div class="w-step" :class="[position, { active: active }]" ref="w-step" :style="stepStyle">
     <div class="w-step__header" v-if="$slots.header || step.header">
       <slot name="header">{{ step.header }}</slot>
     </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, PropSync, Emit, Ref } from 'vue-property-decorator'
+import { Component, Vue, Prop, Emit, Ref } from 'vue-property-decorator'
 
 @Component
 export default class WStep extends Vue {
@@ -28,11 +28,8 @@ export default class WStep extends Vue {
   @Prop({ type: Object })
   step!: W.Step
 
-  @PropSync('targetStyle', { type: Object })
-  syncedTargetStyle!: object
-
-  @Prop({ type: Boolean })
-  active!: boolean
+  @Prop({ type: String })
+  target!: string
 
   @Prop({ type: [Boolean, Object], default: true })
   actions!: boolean
@@ -43,6 +40,11 @@ export default class WStep extends Vue {
   // 角标位置 top | left | right | bottom✔
   position = 'bottom'
 
+  // 是否激活
+  get active() {
+    return this.target === this.step.target
+  }
+
   mounted() {
     this.init()
   }
@@ -50,8 +52,6 @@ export default class WStep extends Vue {
   init() {
     // 获取目标元素
     this.targetDOM = document.querySelector(this.step.target)
-    // 添加data-guide属性
-    this.targetDOM && this.targetDOM.setAttribute('data-w-guide', 'w-guide')
   }
 
   // 获取step样式
@@ -64,8 +64,6 @@ export default class WStep extends Vue {
       const { top: targetTop, left: targetLeft } = targetDOM.getBoundingClientRect()
       // 当前step元素坐标
       const { height: stepHeight } = this.$step.getBoundingClientRect()
-      // 首次初始化
-      this.processActiveTarget()
 
       // 重置tail位置
       if (targetTop <= 0) {
@@ -84,35 +82,15 @@ export default class WStep extends Vue {
     }
   }
 
-  // 处理当前target元素
-  processActiveTarget() {
-    if (this.active && this.targetDOM) {
-      // 目标元素坐标
-      const { top, left, width, height } = this.targetDOM.getBoundingClientRect()
-
-      this.syncedTargetStyle = {
-        top: `${top}px`,
-        left: `${left}px`,
-        width: `${width}px`,
-        height: `${height}px`
-      }
-    }
-
-    this.active && this.targetDOM && this.targetDOM.classList.toggle('active')
-  }
-
   // 下一步
   @Emit('next')
   next() {
-    this.processActiveTarget()
     console.log('emit next')
-    return 'test'
   }
 
   // 上一步
   @Emit('prev')
   prev() {
-    this.processActiveTarget()
     console.log('emit prev')
   }
 }
