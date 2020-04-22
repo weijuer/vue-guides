@@ -10,8 +10,8 @@
 
     <div class="w-step__actions" v-if="$slots.actions || actions">
       <slot name="actions">
-        <a href="javascript:;" @click="prev()">上一步</a>
-        <a href="javascript:;" @click="next()">下一步</a>
+        <a class="w-step__actions-btn" v-show="!isFirst" href="javascript:;" @click="prev()">上一步</a>
+        <a class="w-step__actions-btn" href="javascript:;" @click="next()">{{ nextText }}</a>
       </slot>
     </div>
   </div>
@@ -34,6 +34,12 @@ export default class WStep extends Vue {
   @Prop({ type: [Boolean, Object], default: true })
   actions!: boolean
 
+  @Prop({ type: Boolean, default: false })
+  isFirst!: boolean
+
+  @Prop({ type: Boolean, default: false })
+  isLast!: boolean
+
   // 页面guide对应元素
   targetDOM: Element | null = null
 
@@ -43,6 +49,10 @@ export default class WStep extends Vue {
   // 是否激活
   get active() {
     return this.target === this.step.target
+  }
+
+  get nextText() {
+    return this.isLast ? '完成' : '下一步'
   }
 
   mounted() {
@@ -119,6 +129,7 @@ tailMaker(positions)
         tail(pos)
 
 .w-step
+  min-width: 120px;
   padding: 6px;
   display: inline-block;
   position: fixed
@@ -128,13 +139,22 @@ tailMaker(positions)
   visibility hidden
   background: #fff;
   border-radius: 4px;
-  transition: all .2ms .1s linear;
+  transition: all .2ms linear;
 
   &.active
     visibility visible
 
   .w-step__header
     font-weight 600
+
+  .w-step__actions
+    display flex
+    justify-content flex-end
+
+    .w-step__actions-btn
+      margin-right 8px
+      &:last-child
+        margin-right 0
 
   tailMaker($position)
 </style>

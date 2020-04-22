@@ -1,10 +1,10 @@
 <template>
   <div class="w-guide" v-if="syncedShow">
     <div class="w-guide-overlay"></div>
-    <div class="w-guide-target" :style="targetStyle" v-html="targetDOM"></div>
+    <div class="w-guide-target" :style="targetStyle"></div>
     <div class="w-guide-steps">
       <slot>
-        <w-step v-for="(step, index) of steps" :key="'step' + index" :target="target" :step="step" @next="next()" @prev="prev()"></w-step>
+        <w-step v-for="(step, index) of steps" :key="'step' + index" :isFirst="isFirst" :isLast="isLast" :target="target" :step="step" @next="next()" @prev="prev()"></w-step>
       </slot>
     </div>
   </div>
@@ -31,16 +31,24 @@ export default class WGuide extends Vue {
   // 当前激活指引步骤
   private active = 1
 
+  // 是否第一步
+  get isFirst() {
+    return this.active === 1
+  }
+
+  // 是否最后一步
+  get isLast() {
+    return this.active === this.steps.length
+  }
+
   // target
   private target = ''
 
   // 当前激活指引target样式
   private targetStyle = {}
 
-  // 复制target节点
+  // target节点
   private targetDOM: Element | null = null
-
-  private cloneTargetDOM: Node | null = null
 
   mounted() {
     this.init()
@@ -62,8 +70,6 @@ export default class WGuide extends Vue {
     if (this.targetDOM) {
       // 添加属性
       this.targetDOM.setAttribute('data-w-guide', 'w-guide')
-      // 复制目标节点
-      this.cloneTargetDOM = this.targetDOM.cloneNode(true)
       // 目标元素坐标
       const { top, left, width, height } = this.targetDOM.getBoundingClientRect()
 
@@ -72,6 +78,7 @@ export default class WGuide extends Vue {
         left: `${left}px`,
         width: `${width}px`,
         height: `${height}px`
+        // clip: `rect(${top}px, ${right}px, ${bottom}px, ${left}px)`
       }
     }
   }
@@ -115,7 +122,7 @@ export default class WGuide extends Vue {
   .w-guide-target
     position: absolute;
     z-index: 2021
-    background #fff
-    box-shadow: 0px 0px 4px 2px #000
+    background transparent
+    box-shadow: inset 0px 0px 2px 2px #4c4c4c;
     transition: all .3s ease-out;
 </style>
